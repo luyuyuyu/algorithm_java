@@ -1,51 +1,26 @@
-package sort;
-
-import java.util.Arrays;
-
-//smaller than pivot before pivot, bigger after
+package list;
+//build another link using the nodes in existing link
 class Partition {
-	public static void partition(int[] array, int pivotIndex) {
-		int pivot = array[pivotIndex];
-		swap(array, pivotIndex, array.length - 1);
-		int leftBound = 0;
-		int rightBound = array.length - 2;
-		while (leftBound <= rightBound) {
-			if (array[leftBound] < pivot) {//instead of array[rightBound]
-				++leftBound;//leftBound = first num > pivot
+	public ListNode partition(ListNode head, int target) {
+		if (head == null || head.next == null) return head;
+		ListNode small = new ListNode(0);
+		ListNode big = new ListNode(0);
+		ListNode smallCur = small;
+		ListNode bigCur = big;
+		while (head != null) {
+			if (head.value < target) {
+				smallCur.next = head;
+				smallCur = smallCur.next;
 			} else {
-				swap(array, leftBound, rightBound);
-				--rightBound;
+				bigCur.next = head;
+				bigCur = bigCur.next;
 			}
+			head = head.next;
 		}
-		swap(array, leftBound, array.length - 1);
-    }
-	
-	public static void swap(int[] array, int left, int right) {
-		int temp = array[left];
-		array[left] = array[right];
-		array[right] = temp;
-		return;
-	}
-	
-	public static void main(String[] args) {
-		int[] array = {1, 4, 5, 6, 1, 1, 1, 3};
-		int pivot = 7;
-		partition(array, pivot);
-		System.out.println(Arrays.toString(array));
+		smallCur.next = big.next;
+		small = small.next;
+		bigCur.next = null;//or there would be cycle because in the exsiting link, the biggest ele may link to another node
+		return small;
+		//te your solution here
 	}
 }
-
-/*
-1 4 5 6 1 1 1 3
-l           r
-  l         r
-1 1 5 6 1 1 4 3
-  l       r
-    l     r
-1 1 1 6 1 5 4 3
-    l   r
-      l r
-1 1 1 1 6 5 4 3
-      l
-      r
-*/
